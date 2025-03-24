@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Todo List</h1>
+    <form method="post">
+        {% csrf_token %}
+        <input type="text" name="task" placeholder="Add a new task" required>
+        <button type="submit">Add</button>
+    </form>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <a href="{% url 'task_detail' task.id %}">{{ task.text }}</a>
+                {% if not task.completed %}
+                    <a href="{% url 'complete_task' task.id %}">✔️</a>
+                {% endif %}
+                <a href="{% url 'edit_task' task.id %}">✏️</a>
+                <a href="{% url 'delete_task' task.id %}">❌</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
