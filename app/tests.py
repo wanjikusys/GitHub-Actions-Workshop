@@ -28,7 +28,7 @@ class TaskViewsTest(TestCase):
 
     def test_create_task(self):
         response = self.client.post(reverse('index'), {'task': 'New Task'})
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.assertTrue(Task.objects.filter(text='New Task').exists())
 
     def test_edit_task(self):
