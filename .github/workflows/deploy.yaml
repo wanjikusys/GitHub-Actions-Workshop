@@ -1,0 +1,72 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Trigger on push to the main branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Checkout code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Docker Buildx (for building images)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/todo-app:$GITHUB_SHA .
+
+      # Push Docker image to Docker Hub
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/todo-app:$GITHUB_SHA
+
+  #     # Send deployment status to Slack (Success message)
+  #     - name: Notify Slack (Success)
+  #       if: success()
+  #       run: |
+  #         curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment to Docker Hub was successful!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+      
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     # Checkout code from the repository
+  #     - name: Checkout code
+  #       uses: actions/checkout@v2
+
+  #     # Deploy Docker container to Render
+  #     - name: Deploy to Render
+  #       run: |
+  #         curl -X POST \
+  #           -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+  #           -H "Content-Type: application/json" \
+  #           -d '{"serviceId":"YOUR_RENDER_SERVICE_ID", "dockerImage":"${{ secrets.DOCKER_USERNAME }}/todo-app:$GITHUB_SHA"}' \
+  #           https://api.render.com/v1/services/YOUR_RENDER_SERVICE_ID/deploy
+
+  #     # Send deployment status to Slack (Deployment Complete)
+  #     - name: Notify Slack (Complete)
+  #       if: success()
+  #       run: |
+  #         curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment to Render is complete!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  #     # Send failure status to Slack if any step fails
+  #     - name: Notify Slack (Failure)
+  #       if: failure()
+  #       run: |
+  #         curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment failed!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
