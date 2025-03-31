@@ -67,6 +67,26 @@ jobs:
           with:
             name: coverage-report
             path: htmlcov  # Uploads the generated coverage report
+
+  sonarqube:
+      needs: test  # Run SonarQube after tests
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v2
+
+        - name: SonarQube Scan
+          uses: sonarsource/sonarqube-scan-action@master
+          env:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+            SONAR_HOST_URL: "https://sonarcloud.io"  # Change if self-hosted
+          with:
+            args: >
+              -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+              -Dsonar.organization=kadimasum  # Required for SonarCloud
+              -Dsonar.python.coverage.reportPaths=coverage.xml
+
   build:
     runs-on: ubuntu-latest
     
