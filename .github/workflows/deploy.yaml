@@ -119,15 +119,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # - name: Deploy to Render
-      #   run: |
-      #     curl -X POST \
-      #       -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-      #       -H "Content-Type: application/json" \
-      #       -d '{"serviceId":"YOUR_RENDER_SERVICE_ID", "dockerImage":"${{ secrets.DOCKER_USERNAME }}/todo-app:$GITHUB_SHA"}' \
-      #       https://api.render.com/v1/services/YOUR_RENDER_SERVICE_ID/deploy
-
-
       - name: Deploy to Render
         run: |
           curl -X POST \
