@@ -117,10 +117,10 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/todo-app:$GITHUB_SHA
 
       # Send deployment status to Slack (Success message)
-      - name: Notify Slack (Success)
-        if: success()
-        run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment to Docker Hub was successful!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+      # - name: Notify Slack (Success)
+      #   if: success()
+      #   run: |
+      #     curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment to Docker Hub was successful!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
       
   # deploy:
   #   needs: build
@@ -153,14 +153,14 @@ jobs:
   #         curl -X POST -H 'Content-type: application/json' --data '{"text":"Deployment failed!"}' ${{ secrets.SLACK_WEBHOOK_URL }}
 
 
-  # slack:
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  #   steps:
-  #     - uses: act10ns/slack@v2
-  #       with:
-  #         status: ${{ job.status }}
-  #         steps: ${{ toJson(steps) }}
-  #         channel: 'github-actions-workshop'
-  #       if: always()
+  slack:
+    runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - uses: act10ns/slack@v2
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: 'github-actions-workshop'
+        if: always()
