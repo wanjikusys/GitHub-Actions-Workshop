@@ -84,7 +84,7 @@ jobs:
           with:
             args: >
               -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-              -Dsonar.organization=kadimasum  # Required for SonarCloud
+              -Dsonar.organization=kadimasum  
               -Dsonar.python.coverage.reportPaths=coverage.xml
 
   build:
