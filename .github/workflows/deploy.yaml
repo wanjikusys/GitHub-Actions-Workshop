@@ -88,6 +88,7 @@ jobs:
               -Dsonar.python.coverage.reportPaths=coverage.xml
 
   build:
+    needs: sonarqube
     runs-on: ubuntu-latest
     
     steps:
@@ -128,6 +129,7 @@ jobs:
             https://api.render.com/deploy/${{ secrets.DEPLOY_HOOK_ID }}
 
   slack:
+    needs: deploy
     runs-on: ubuntu-latest
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
