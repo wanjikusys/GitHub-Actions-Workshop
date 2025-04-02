@@ -51,6 +51,8 @@ li {
     border-radius: 5px;
 }
 
+
+
 @media (max-width: 600px) {
     .container {
         width: 80%;
